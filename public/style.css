@@ -489,3 +489,57 @@ textarea:focus {
   font-size: 14px;
   color: #4b5563;
 }
+
+.cta input {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.cta input:focus {
+  outline: none;
+  border-color: #c1842d;
+}
+
+.consent {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #4b5563;
+  text-align: left;
+}
+
+.consent input {
+  width: auto;
+  margin-top: 2px;
+}
+
+.cta button.disabled,
+.cta button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.lead-error {
+  margin-top: 12px;
+  color: #b91c1c;
+  font-size: 14px;
+  text-align: left;
+}
+
+.lead-success {
+  margin-top: 14px;
+  padding: 14px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+}
