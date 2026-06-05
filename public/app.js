@@ -93,7 +93,8 @@ function updateTopProgress() {
   const progressDots = document.querySelectorAll(".progress-dot");
 
   if (progressFill) {
-    const progress = ((currentStep + 1) / questions.length) * 100;
+    const progress =
+  ((currentStep) / (questions.length - 1)) * 82;
     progressFill.style.width = `${progress}%`;
   }
 
