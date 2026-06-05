@@ -344,7 +344,7 @@ textarea {
   border: 2px solid rgba(255, 143, 61, 0.35);
   border-radius: 30px;
   padding: 28px 32px;
-  font-size: 18px;
+  font-size: 16px;
   outline: none;
   color: var(--text);
   background: rgba(255,255,255,0.78);
@@ -358,6 +358,12 @@ textarea:focus {
   box-shadow:
     0 0 0 6px rgba(124,60,255,0.10),
     0 20px 55px rgba(255,138,29,0.12);
+}
+
+textarea::placeholder {
+  font-size: 14px;
+  color: #8a8fa3;
+  line-height: 1.5;
 }
 
 .counter {
@@ -415,29 +421,34 @@ textarea:focus {
 
 .btn {
   border: none;
-  border-radius: 22px;
-  padding: 20px 34px;
+  border-radius: 16px;
+  padding: 14px 24px;
   cursor: pointer;
-  font-size: 18px;
-  font-weight: 900;
-  transition: 0.22s ease;
+  font-size: 15px;
+  font-weight: 700;
+  transition: all .2s ease;
 }
 
 .btn.secondary {
-  background: rgba(255,255,255,0.72);
+  background: rgba(255,255,255,0.75);
   color: var(--text);
-  box-shadow: 0 16px 36px rgba(36,34,71,0.08);
+  border: 1px solid rgba(17,25,54,0.06);
+  box-shadow:
+    0 8px 20px rgba(36,34,71,0.06);
 }
 
 .btn.primary {
-  min-width: 240px;
-  color: white;
-  min-width: 180px;
-  padding: 18px 28px;
-  background: linear-gradient(135deg, #ffb347, #d8912e);
+  min-width: 150px;
+  padding: 14px 26px;
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    #f3a63b,
+    #d8912e
+  );
+
   box-shadow:
-    0 22px 44px rgba(255, 111, 48, 0.26),
-    0 14px 32px rgba(124,60,255,0.18);
+    0 10px 24px rgba(216,145,46,.18);
 }
 
 .btn:hover {
@@ -677,4 +688,3 @@ textarea:focus {
   .result-grid {
     grid-template-columns: 1fr;
   }
-}
