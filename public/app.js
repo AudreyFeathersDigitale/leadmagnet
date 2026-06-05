@@ -92,10 +92,10 @@ function updateTopProgress() {
   const progressFill = document.querySelector(".progress-fill");
   const progressDots = document.querySelectorAll(".progress-dot");
 
+  const progress = currentStep / (questions.length - 1);
+
   if (progressFill) {
-    const progress =
-  ((currentStep) / (questions.length - 1)) * 82;
-    progressFill.style.width = `${progress}%`;
+    progressFill.style.transform = `translateY(-50%) scaleX(${progress})`;
   }
 
   progressDots.forEach((dot, index) => {
