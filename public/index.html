@@ -4,48 +4,55 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Diagnostic Clarté</title>
-
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
 
-  <div class="app">
+<body>
+  <div class="app-shell">
 
     <aside class="sidebar">
-
-      <div class="logo">✦</div>
-
-      <h1>Diagnostic Clarté</h1>
-
-      <p>
-        En 3 minutes, fais le point sur ta situation
-        pour retrouver plus de clarté,
-        de sérénité et d’efficacité.
-      </p>
-
-      <nav id="steps"></nav>
-
-      <div class="privacy">
-        🛡️ Vos réponses sont confidentielles
+      <div class="brand-orb">
+        ✦
       </div>
 
+      <nav id="steps" class="steps"></nav>
+
+      <div class="pause-card">
+        <p>Besoin d’une pause ?</p>
+        <div class="breath-circle">
+          <span>Respire<br>30 sec</span>
+        </div>
+      </div>
     </aside>
 
-    <main class="panel">
+    <main class="main-area">
+      <header class="topbar">
+        <div class="progress-wrap">
+          <div class="progress-track">
+            <div class="progress-fill"></div>
+            <span class="progress-dot active"></span>
+            <span class="progress-dot"></span>
+            <span class="progress-dot"></span>
+            <span class="progress-dot"></span>
+            <span class="progress-dot"></span>
+            <span class="progress-dot"></span>
+          </div>
+        </div>
 
-      <button class="exit">
-        Sortir ×
-      </button>
+        <button class="exit" type="button">
+          <span>×</span>
+          Quitter
+        </button>
+      </header>
 
-      <div id="questionView"></div>
-
-      <div id="summaryView" class="hidden"></div>
-
+      <section class="question-card">
+        <div id="questionView"></div>
+        <div id="summaryView" class="hidden"></div>
+      </section>
     </main>
 
   </div>
 
   <script src="app.js"></script>
-
 </body>
 </html>
