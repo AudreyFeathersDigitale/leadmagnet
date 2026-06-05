@@ -446,7 +446,6 @@ textarea::placeholder {
     #f3a63b,
     #d8912e
   );
-
   box-shadow:
     0 10px 24px rgba(216,145,46,.18);
 }
@@ -654,7 +653,6 @@ textarea::placeholder {
 0 10px 30px rgba(255,255,255,.35) inset;
   }
 
-  .question-card::before {
  .question-card::before {
   display: none;
 }
@@ -688,3 +686,4 @@ textarea::placeholder {
   .result-grid {
     grid-template-columns: 1fr;
   }
+}
