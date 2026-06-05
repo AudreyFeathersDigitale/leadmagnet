@@ -129,9 +129,7 @@ function renderQuestion() {
   const q = questions[currentStep];
 
   questionView.innerHTML = `
-    <div class="badge">
-      Étape ${currentStep + 1} sur ${questions.length}
-    </div>
+    <div class="badge">Étape ${currentStep + 1} sur ${questions.length}</div>
 
     <h2>${formatTitle(q.title, q.highlight)}</h2>
 
@@ -145,12 +143,6 @@ function renderQuestion() {
       >
         ← Précédent
       </button>
-
-      <div class="dots">
-        ${questions.map((_, index) => `
-          <span class="dot ${index === currentStep ? "active" : ""}"></span>
-        `).join("")}
-      </div>
 
       <button class="btn primary" onclick="nextStep()">
         ${currentStep === questions.length - 1 ? "Voir ma synthèse" : "Suivant →"}
@@ -198,7 +190,6 @@ function renderInput(q) {
 
     return `
       <div class="decision-box">
-
         <div class="decision-section">
           <label>
             Si on se reparle dans 6 mois et que rien n’a changé,
@@ -267,7 +258,6 @@ function renderInput(q) {
             `).join("")}
           </div>
         </div>
-
       </div>
     `;
   }
@@ -279,17 +269,13 @@ function saveText(value) {
   answers[currentStep] = value;
 
   const counter = document.querySelector(".counter");
-  if (counter) {
-    counter.textContent = `${value.length} / 1000`;
-  }
+  if (counter) counter.textContent = `${value.length} / 1000`;
 }
 
 function toggleCard(option) {
   option = unescapeText(option);
 
-  if (!answers[currentStep]) {
-    answers[currentStep] = [];
-  }
+  if (!answers[currentStep]) answers[currentStep] = [];
 
   if (answers[currentStep].includes(option)) {
     answers[currentStep] = answers[currentStep].filter(item => item !== option);
@@ -324,13 +310,8 @@ function saveReadiness(value) {
 function toggleRealBlocker(option) {
   option = unescapeText(option);
 
-  if (!answers[currentStep]) {
-    answers[currentStep] = {};
-  }
-
-  if (!answers[currentStep].blockers) {
-    answers[currentStep].blockers = [];
-  }
+  if (!answers[currentStep]) answers[currentStep] = {};
+  if (!answers[currentStep].blockers) answers[currentStep].blockers = [];
 
   if (answers[currentStep].blockers.includes(option)) {
     answers[currentStep].blockers = answers[currentStep].blockers.filter(
@@ -365,22 +346,77 @@ function prevStep() {
   }
 }
 
-function calculateScore() {
-  let score = readinessScore * 10;
+function scoreTextAnswer(text) {
+  if (!text) return 0;
 
-  score += ((answers[1] || []).length * 5);
-  score += ((answers[4] || []).length * 5);
+  const lower = text.toLowerCase();
+  let score = 0;
+
+  const strongSignals = [
+    "épuisé",
+    "épuisée",
+    "burn out",
+    "burnout",
+    "je n'en peux plus",
+    "je ne peux plus",
+    "à bout",
+    "saturé",
+    "saturée",
+    "je craque",
+    "perte de contrôle",
+    "je perds le contrôle"
+  ];
+
+  const mediumSignals = [
+    "stress",
+    "fatigue",
+    "pression",
+    "charge mentale",
+    "angoisse",
+    "débordé",
+    "débordée",
+    "je dors mal",
+    "manque de temps",
+    "mental",
+    "surcharge"
+  ];
+
+  strongSignals.forEach(word => {
+    if (lower.includes(word)) score += 8;
+  });
+
+  mediumSignals.forEach(word => {
+    if (lower.includes(word)) score += 4;
+  });
+
+  if (text.length > 120) score += 4;
+  if (text.length > 250) score += 4;
+
+  return Math.min(score, 15);
+}
+
+function calculateScore() {
+  let score = 0;
+
+  score += readinessScore * 4;
+
+  score += Math.min((answers[1] || []).length * 3, 15);
+  score += Math.min((answers[4] || []).length * 2, 10);
+
+  score += scoreTextAnswer(answers[0]);
+  score += scoreTextAnswer(answers[2]);
+  score += scoreTextAnswer(answers[3]);
 
   const decision = answers[5] || {};
 
-  if (decision.disappointed === "Oui") score += 15;
-  if (decision.disappointed === "Je ne sais pas") score += 5;
+  if (decision.disappointed === "Oui") score += 10;
+  if (decision.disappointed === "Je ne sais pas") score += 4;
 
   if (Array.isArray(decision.blockers)) {
-    score += decision.blockers.length * 3;
+    score += Math.min(decision.blockers.length * 2, 5);
   }
 
-  return Math.min(score, 100);
+  return Math.min(Math.round(score), 100);
 }
 
 function getUrgency(score) {
@@ -409,9 +445,7 @@ function renderLeadGate() {
   updateTopProgress();
 
   questionView.innerHTML = `
-    <div class="badge">
-      Ta synthèse est prête
-    </div>
+    <div class="badge">Ta synthèse est prête</div>
 
     <h2>
       Où souhaites-tu recevoir ton
@@ -419,9 +453,7 @@ function renderLeadGate() {
     </h2>
 
     <div class="lead-gate">
-      <p>
-        Renseigne tes informations pour afficher ta synthèse.
-      </p>
+      <p>Renseigne tes informations pour afficher ta synthèse.</p>
 
       <input
         type="text"
@@ -527,7 +559,6 @@ function renderSummary() {
   const score = calculateScore();
   const urgency = getUrgency(score);
   const status = getStatus(score);
-  const decision = answers[5] || {};
 
   summaryView.innerHTML = `
     <div class="summary-layout">
@@ -647,9 +678,7 @@ async function submitLead() {
 }
 
 function resetDiagnostic() {
-  const confirmExit = confirm(
-    "Veux-tu vraiment quitter le diagnostic ?"
-  );
+  const confirmExit = confirm("Veux-tu vraiment quitter le diagnostic ?");
 
   if (!confirmExit) return;
 
