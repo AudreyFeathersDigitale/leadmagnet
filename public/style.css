@@ -295,6 +295,8 @@ body::before {
   place-items: center;
   color: var(--gold);
   font-size: 28px;
+  Margin-bottom: 18px;
+
 
   background:
     radial-gradient(circle at 35% 30%,
