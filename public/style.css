@@ -273,7 +273,8 @@ body::before {
 
 .question-card {
   position: relative;
-  min-height: calc(100vh - 128px);
+  min-height: auto;
+  height: fit-content;
   padding: 24px 48px;
   border-radius: 42px;
   background:
