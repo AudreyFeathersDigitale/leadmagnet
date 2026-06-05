@@ -75,6 +75,7 @@ let currentStep = 0;
 let answers = {};
 let readinessScore = 5;
 let hasSubmittedLead = false;
+let hasRequestedExchange = false;
 
 let leadData = {
   firstName: "",
@@ -529,10 +530,11 @@ function updateGateButtonState() {
   if (error) error.textContent = "";
 }
 
-function validateLeadGate() {
+async function validateLeadGate() {
   updateGateButtonState();
 
   const error = document.getElementById("gateError");
+  const button = document.getElementById("gateSubmitButton");
 
   if (!leadData.firstName) {
     error.textContent = "Merci de renseigner votre prénom.";
@@ -543,6 +545,11 @@ function validateLeadGate() {
     error.textContent = "Merci de renseigner un email valide.";
     return;
   }
+
+  button.disabled = true;
+  button.textContent = "Préparation de ta synthèse...";
+
+  await submitLead("Synthèse demandée");
 
   renderSummary();
 }
@@ -594,7 +601,7 @@ function renderSummary() {
           <h3>Tu veux un retour de Sandra ?</h3>
 
           <p>
-            Clique ci-dessous pour transmettre ta demande.
+            Clique ci-dessous pour confirmer que tu souhaites un échange.
           </p>
 
           <div id="leadError" class="lead-error"></div>
@@ -607,9 +614,10 @@ function renderSummary() {
           <button
             type="button"
             id="leadSubmitButton"
-            onclick="submitLead()"
+            onclick="submitLead('Demande échange')"
+            ${hasRequestedExchange ? "disabled" : ""}
           >
-            Demander un échange
+            ${hasRequestedExchange ? "Demande envoyée" : "Demander un échange"}
           </button>
         </div>
       </div>
@@ -617,17 +625,25 @@ function renderSummary() {
   `;
 }
 
-async function submitLead() {
-  const error = document.getElementById("leadError");
-  const success = document.getElementById("successMessage");
-  const button = document.getElementById("leadSubmitButton");
+async function submitLead(action = "Demande échange") {
+  const error =
+    document.getElementById("leadError") ||
+    document.getElementById("gateError");
 
-  if (hasSubmittedLead) return;
+  const success = document.getElementById("successMessage");
+
+  const button =
+    document.getElementById("leadSubmitButton") ||
+    document.getElementById("gateSubmitButton");
+
+  if (action === "Synthèse demandée" && hasSubmittedLead) return;
+  if (action === "Demande échange" && hasRequestedExchange) return;
 
   const score = calculateScore();
   const decision = answers[5] || {};
 
   const payload = {
+    action,
     score,
     urgence: getUrgency(score),
     statut: getStatus(score),
@@ -646,33 +662,51 @@ async function submitLead() {
   };
 
   try {
-    button.disabled = true;
-    button.textContent = "Envoi en cours...";
-    error.textContent = "";
+    if (button) {
+      button.disabled = true;
+      button.textContent =
+        action === "Synthèse demandée"
+          ? "Préparation de ta synthèse..."
+          : "Envoi en cours...";
+    }
+
+    if (error) error.textContent = "";
 
     await fetch(GOOGLE_SHEET_URL, {
       method: "POST",
       mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json"
-      },
       body: JSON.stringify(payload)
     });
 
-    hasSubmittedLead = true;
+    if (action === "Synthèse demandée") {
+      hasSubmittedLead = true;
+    }
 
-    success.classList.remove("hidden");
+    if (action === "Demande échange") {
+      hasRequestedExchange = true;
 
-    success.innerHTML = `
-      ✅ Merci ${leadData.firstName} !
-      Sandra reviendra vers toi prochainement.
-    `;
+      if (success) {
+        success.classList.remove("hidden");
+        success.innerHTML = `
+          ✅ Merci ${leadData.firstName} !<br>
+          Sandra reviendra vers toi prochainement.
+        `;
+      }
 
-    button.textContent = "Demande envoyée";
-    button.classList.add("disabled");
-  } catch (error) {
-    button.disabled = false;
-    button.textContent = "Demander un échange";
+      if (button) {
+        button.textContent = "Demande envoyée";
+        button.classList.add("disabled");
+      }
+    }
+  } catch (err) {
+    if (button) {
+      button.disabled = false;
+      button.textContent =
+        action === "Synthèse demandée"
+          ? "Voir ma synthèse"
+          : "Demander un échange";
+    }
+
     alert("Erreur lors de l'envoi.");
   }
 }
@@ -686,6 +720,7 @@ function resetDiagnostic() {
   answers = {};
   readinessScore = 5;
   hasSubmittedLead = false;
+  hasRequestedExchange = false;
 
   leadData = {
     firstName: "",
