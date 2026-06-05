@@ -65,13 +65,13 @@ body::before {
 }
 
 .brand-orb {
-  width: 78px;
-  height: 78px;
+  width: 70px;
+  height: 70px;
   margin: 0 auto 32px;
   border-radius: 999px;
   display: grid;
   place-items: center;
-  font-size: 34px;
+  font-size: 30px;
   color: var(--gold);
   background:
     radial-gradient(circle at 40% 35%, #fff 0%, #fff 30%, #ffe7b7 55%, #f7a92f 100%);
@@ -592,13 +592,6 @@ textarea::placeholder {
   font-size: 15px;
 }
 
-.consent {
-  display: flex;
-  gap: 10px;
-  margin: 18px 0;
-  color: var(--muted);
-}
-
 .cta button {
   width: 100%;
   border: none;
@@ -733,4 +726,11 @@ textarea::placeholder {
   opacity: 0.45;
   cursor: not-allowed;
   transform: none;
+}
+
+.mini-note {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 12px;
+  color: #8a8fa3;
 }
