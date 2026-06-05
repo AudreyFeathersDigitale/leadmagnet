@@ -283,20 +283,8 @@ body::before {
 }
 
 .question-card::before {
-  content: "✦";
-  position: absolute;
-  top: 22px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 74px;
-  height: 74px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  color: var(--gold);
-  font-size: 28px;
-  Margin-bottom: 18px;
-
+  display: none;
+  
 
   background:
     radial-gradient(circle at 35% 30%,
@@ -656,11 +644,9 @@ textarea:focus {
   }
 
   .question-card::before {
-    width: 84px;
-    height: 84px;
-    top: -30px;
-    font-size: 32px;
-  }
+ .question-card::before {
+  display: none;
+}
 
   .topbar {
     grid-template-columns: 1fr;
@@ -676,7 +662,7 @@ textarea:focus {
   }
 
   textarea {
-    min-height: 220px;
+    min-height: 140px;
   }
 
   .footer {
