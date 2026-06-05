@@ -67,6 +67,13 @@ let answers = {};
 let readinessScore = 5;
 let hasSubmittedLead = false;
 
+let leadData = {
+  firstName: "",
+  email: "",
+  phone: "",
+  consent: false
+};
+
 const questionView = document.getElementById("questionView");
 const summaryView = document.getElementById("summaryView");
 const stepsEl = document.getElementById("steps");
@@ -96,9 +103,7 @@ function updateTopProgress() {
 }
 
 function formatTitle(title, highlight) {
-  if (!highlight || !title.includes(highlight)) {
-    return title;
-  }
+  if (!highlight || !title.includes(highlight)) return title;
 
   return title.replace(
     highlight,
@@ -258,17 +263,13 @@ function saveText(value) {
   answers[currentStep] = value;
 
   const counter = document.querySelector(".counter");
-  if (counter) {
-    counter.textContent = `${value.length} / 1000`;
-  }
+  if (counter) counter.textContent = `${value.length} / 1000`;
 }
 
 function toggleCard(option) {
   option = unescapeText(option);
 
-  if (!answers[currentStep]) {
-    answers[currentStep] = [];
-  }
+  if (!answers[currentStep]) answers[currentStep] = [];
 
   if (answers[currentStep].includes(option)) {
     answers[currentStep] = answers[currentStep].filter(item => item !== option);
@@ -315,13 +316,12 @@ function nextStep() {
     return;
   }
 
-  renderSummary();
+  renderLeadGate();
 }
 
 function prevStep() {
-  if (summaryView && !summaryView.classList.contains("hidden")) {
-    currentStep = questions.length - 1;
-    renderQuestion();
+  if (!summaryView.classList.contains("hidden")) {
+    renderLeadGate();
     return;
   }
 
@@ -339,13 +339,8 @@ function calculateScore() {
 
   const decision = answers[5] || {};
 
-  if (decision.disappointed === "Oui") {
-    score += 15;
-  }
-
-  if (decision.disappointed === "Je ne sais pas") {
-    score += 5;
-  }
+  if (decision.disappointed === "Oui") score += 15;
+  if (decision.disappointed === "Je ne sais pas") score += 5;
 
   return Math.min(score, 100);
 }
@@ -368,25 +363,131 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function updateLeadButtonState() {
-  const firstName = document.getElementById("firstName");
-  const email = document.getElementById("email");
-  const consent = document.getElementById("consent");
-  const button = document.getElementById("leadSubmitButton");
-  const error = document.getElementById("leadError");
+function renderLeadGate() {
+  questionView.classList.remove("hidden");
+  summaryView.classList.add("hidden");
 
-  if (!firstName || !email || !consent || !button) return;
+  renderSteps();
+  updateTopProgress();
+
+  questionView.innerHTML = `
+    <div class="badge">Ta synthèse est prête</div>
+
+    <h2>
+      Où souhaites-tu recevoir ton
+      <span class="highlight">retour personnalisé</span> ?
+    </h2>
+
+    <div class="lead-gate">
+      <p>
+        Renseigne tes informations pour afficher ta synthèse et permettre à Sandra
+        de te faire un retour si tu souhaites aller plus loin.
+      </p>
+
+      <input
+        type="text"
+        id="gateFirstName"
+        placeholder="Prénom *"
+        value="${leadData.firstName}"
+        oninput="updateGateButtonState()"
+      >
+
+      <input
+        type="email"
+        id="gateEmail"
+        placeholder="Email *"
+        value="${leadData.email}"
+        oninput="updateGateButtonState()"
+      >
+
+      <input
+        type="tel"
+        id="gatePhone"
+        placeholder="Téléphone (optionnel)"
+        value="${leadData.phone}"
+        oninput="updateGateButtonState()"
+      >
+
+      <label class="consent">
+        <input
+          type="checkbox"
+          id="gateConsent"
+          ${leadData.consent ? "checked" : ""}
+          onchange="updateGateButtonState()"
+        >
+        J'accepte d'être recontacté(e)
+      </label>
+
+      <div id="gateError" class="lead-error"></div>
+
+      <div class="footer gate-footer">
+        <button class="btn secondary" onclick="renderQuestion()">
+          ← Modifier mes réponses
+        </button>
+
+        <button
+          type="button"
+          id="gateSubmitButton"
+          class="btn primary disabled"
+          disabled
+          onclick="validateLeadGate()"
+        >
+          Voir ma synthèse
+        </button>
+      </div>
+    </div>
+  `;
+
+  updateGateButtonState();
+}
+
+function updateGateButtonState() {
+  const firstName = document.getElementById("gateFirstName");
+  const email = document.getElementById("gateEmail");
+  const phone = document.getElementById("gatePhone");
+  const consent = document.getElementById("gateConsent");
+  const button = document.getElementById("gateSubmitButton");
+  const error = document.getElementById("gateError");
+
+  if (!firstName || !email || !phone || !consent || !button) return;
+
+  leadData.firstName = firstName.value.trim();
+  leadData.email = email.value.trim();
+  leadData.phone = phone.value.trim();
+  leadData.consent = consent.checked;
 
   const valid =
-    firstName.value.trim().length > 0 &&
-    isValidEmail(email.value.trim()) &&
-    consent.checked &&
-    !hasSubmittedLead;
+    leadData.firstName.length > 0 &&
+    isValidEmail(leadData.email) &&
+    leadData.consent;
 
   button.disabled = !valid;
   button.classList.toggle("disabled", !valid);
 
   if (error) error.textContent = "";
+}
+
+function validateLeadGate() {
+  updateGateButtonState();
+
+  const error = document.getElementById("gateError");
+
+  if (!leadData.firstName) {
+    error.textContent = "Merci de renseigner votre prénom.";
+    return;
+  }
+
+  if (!isValidEmail(leadData.email)) {
+    error.textContent = "Merci de renseigner un email valide.";
+    return;
+  }
+
+  if (!leadData.consent) {
+    error.textContent = "Merci d'accepter d'être recontacté(e).";
+    return;
+  }
+
+  renderSummary();
 }
 
 function renderSummary() {
@@ -404,7 +505,7 @@ function renderSummary() {
   summaryView.innerHTML = `
     <div class="summary-layout">
       <div class="summary-content">
-        <h2>Ta synthèse personnalisée</h2>
+        <h2>${leadData.firstName}, voici ta synthèse personnalisée</h2>
 
         <div class="result-grid">
           <div class="result-card">
@@ -429,40 +530,12 @@ function renderSummary() {
         </div>
 
         <div class="cta">
-          <h3>Prêt(e) à faire le point avec Sandra ?</h3>
+          <h3>Tu veux un retour de Sandra ?</h3>
 
           <p>
-            Laisse tes coordonnées pour être recontacté(e).
+            Tes réponses sont prêtes. Clique ci-dessous pour transmettre ta demande
+            et permettre à Sandra de revenir vers toi.
           </p>
-
-          <input
-            type="text"
-            id="firstName"
-            placeholder="Prénom *"
-            oninput="updateLeadButtonState()"
-          >
-
-          <input
-            type="email"
-            id="email"
-            placeholder="Email *"
-            oninput="updateLeadButtonState()"
-          >
-
-          <input
-            type="tel"
-            id="phone"
-            placeholder="Téléphone"
-          >
-
-          <label class="consent">
-            <input
-              type="checkbox"
-              id="consent"
-              onchange="updateLeadButtonState()"
-            >
-            J'accepte d'être recontacté(e)
-          </label>
 
           <div id="leadError" class="lead-error"></div>
           <div id="successMessage" class="lead-success hidden"></div>
@@ -470,8 +543,6 @@ function renderSummary() {
           <button
             type="button"
             id="leadSubmitButton"
-            class="disabled"
-            disabled
             onclick="submitLead()"
           >
             Demander un échange
@@ -480,35 +551,14 @@ function renderSummary() {
       </div>
     </div>
   `;
-
-  updateLeadButtonState();
 }
 
 async function submitLead() {
-  const firstName = document.getElementById("firstName").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const consent = document.getElementById("consent").checked;
   const error = document.getElementById("leadError");
   const success = document.getElementById("successMessage");
   const button = document.getElementById("leadSubmitButton");
 
   if (hasSubmittedLead) return;
-
-  if (!firstName) {
-    error.textContent = "Merci de renseigner votre prénom.";
-    return;
-  }
-
-  if (!isValidEmail(email)) {
-    error.textContent = "Merci de renseigner un email valide.";
-    return;
-  }
-
-  if (!consent) {
-    error.textContent = "Merci d'accepter d'être recontacté(e).";
-    return;
-  }
 
   const score = calculateScore();
 
@@ -524,10 +574,10 @@ async function submitLead() {
     desire: answers[3] || "",
     blocages: Array.isArray(answers[4]) ? answers[4].join(", ") : "",
     reponseFinale: answers[5]?.conditional || "",
-    firstName,
-    email,
-    phone,
-    consent: "Oui"
+    firstName: leadData.firstName,
+    email: leadData.email,
+    phone: leadData.phone,
+    consent: leadData.consent ? "Oui" : "Non"
   };
 
   try {
@@ -548,8 +598,8 @@ async function submitLead() {
 
     success.classList.remove("hidden");
     success.innerHTML = `
-      ✅ Merci ${firstName} !<br>
-      Sandra reviendra vers vous prochainement.
+      ✅ Merci ${leadData.firstName} !<br>
+      Sandra reviendra vers toi prochainement.
     `;
 
     button.textContent = "Demande envoyée";
@@ -572,6 +622,13 @@ function resetDiagnostic() {
   answers = {};
   readinessScore = 5;
   hasSubmittedLead = false;
+
+  leadData = {
+    firstName: "",
+    email: "",
+    phone: "",
+    consent: false
+  };
 
   summaryView.classList.add("hidden");
   questionView.classList.remove("hidden");
