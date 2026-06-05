@@ -1,4 +1,4 @@
-const GOOGLE_SHEET_URL = "COLLE_TON_URL_APPS_SCRIPT_ICI";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzIXboTKY_xdDIAa1fNVlBDolyEQFVaEEf8EDLVep9tVNWs6o9SGQN6RvODdgG6XHkf0Q/exec";
 
 const questions = [
   {
