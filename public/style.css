@@ -285,21 +285,26 @@ body::before {
 .question-card::before {
   content: "✦";
   position: absolute;
-  top: -42px;
+  top: 22px;
   left: 50%;
   transform: translateX(-50%);
-  width: 118px;
-  height: 118px;
+  width: 74px;
+  height: 74px;
   border-radius: 999px;
   display: grid;
   place-items: center;
   color: var(--gold);
-  font-size: 44px;
+  font-size: 28px;
+
   background:
-    radial-gradient(circle at 36% 24%, rgba(255,255,255,1), rgba(255,244,225,0.9) 42%, rgba(171,142,255,0.35) 100%);
+    radial-gradient(circle at 35% 30%,
+    rgba(255,255,255,0.95),
+    rgba(255,248,232,0.9));
+
   box-shadow:
-    0 24px 70px rgba(255, 126, 40, 0.16),
-    0 0 0 14px rgba(255,255,255,0.38);
+    0 10px 30px rgba(255, 183, 77, 0.12);
+
+  border: 1px solid rgba(255,255,255,0.8);
 }
 
 .badge {
