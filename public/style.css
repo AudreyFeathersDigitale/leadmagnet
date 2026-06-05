@@ -44,11 +44,11 @@ body::before {
   position: relative;
   z-index: 1;
   min-height: 100vh;
-  max-width: 980px;
+  max-width: 1040px;
   margin: 0 auto;
   padding: 28px;
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 170px 1fr;
   gap: 32px;
 }
 
@@ -271,7 +271,7 @@ body::before {
 .question-card {
   position: relative;
   min-height: calc(100vh - 128px);
-  padding: 56px 64px;
+  padding: 34px 54px;
   border-radius: 42px;
   background:
     linear-gradient(145deg, rgba(255,255,255,0.80), rgba(255,255,255,0.46)),
@@ -309,7 +309,7 @@ body::before {
 
 .badge {
   width: fit-content;
-  margin: 70px auto 28px;
+  margin: 38px auto 18px;
   padding: 10px 22px;
   border-radius: 999px;
   background: rgba(255,255,255,0.78);
@@ -325,7 +325,8 @@ h2 {
   margin: 0 auto 16px;
   font-family: Georgia, "Times New Roman", serif;
   text-align: center;
-  font-size: clamp(24px, 3vw, 42px);
+  font-size: clamp(22px, 2.5vw, 36px);
+  margin-bottom: 10px;
   line-height: 1.08;
   letter-spacing: -0.04em;
   color: #111936;
@@ -344,7 +345,7 @@ h2 {
 
 textarea {
   width: 100%;
-  min-height: 180px;
+  min-height: 140px;
   resize: none;
   border: 2px solid rgba(255, 143, 61, 0.35);
   border-radius: 30px;
