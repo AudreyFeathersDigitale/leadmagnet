@@ -271,7 +271,7 @@ body::before {
 .question-card {
   position: relative;
   min-height: calc(100vh - 128px);
-  padding: 34px 54px;
+  padding: 24px 48px;
   border-radius: 42px;
   background:
     linear-gradient(145deg, rgba(255,255,255,0.80), rgba(255,255,255,0.46)),
@@ -320,16 +320,20 @@ body::before {
   letter-spacing: .03em;
 }
 
-h2 {
-  max-width: 740px;
-  margin: 0 auto 16px;
-  font-family: Georgia, "Times New Roman", serif;
+  h2 {
+  max-width: 640px;
+  margin: 0 auto 22px;
   text-align: center;
-  font-size: clamp(22px, 2.5vw, 36px);
-  margin-bottom: 10px;
-  line-height: 1.08;
-  letter-spacing: -0.04em;
-  color: #111936;
+  font-family: Inter, sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: #151b3b;
+}
+
+h2 .highlight {
+  color: #d8912e;
 }
 
 .gold {

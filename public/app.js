@@ -81,7 +81,11 @@ function renderQuestion() {
       Étape ${currentStep + 1} sur ${questions.length}
     </div>
 
-    <h2>${q.title}</h2>
+    <h2>
+  Qu’est-ce qui est le
+  <span class="highlight">plus lourd</span>
+  à gérer pour toi en ce moment ?
+</h2>
 
     ${renderInput(q)}
 
