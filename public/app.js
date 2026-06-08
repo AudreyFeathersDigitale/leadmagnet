@@ -1,4 +1,4 @@
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwRMkU8PrlWevYH5jPgMTx_zN-Ul6Kvk2qx-A1UgNqeQPgssSB8VPW5D6OHDGWUVirg5Q/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwy_lJ3__qWOhLPP6GEoLvwRuPWzBDPBKCgvJi9pAFYs_TRmAt2_fYSiHdMo_BlfwKP/exec";
 
 const questions = [
   {
